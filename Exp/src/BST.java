@@ -19,93 +19,132 @@ public class BST {
 
 		}
 	}
-	
+
 	public static void inOrder(TreeNode cur) {
-		if(cur.left != null) {
-			inOrder(cur.left);
+
+		if (cur != null) {
+			if (cur.left != null) {
+				inOrder(cur.left);
+			}
+			System.out.print(cur.data + ",");
+			if (cur.right != null) {
+				inOrder(cur.right);
+			}
 		}
-		System.out.print(cur.data+",");
-		if(cur.right != null) {
-			inOrder(cur.right);
-		}
+
 	}
-	
+
 	public static void preOrder(TreeNode cur) {
-		if(cur != null)
-			System.out.print(cur.data+",");
-			if(cur.left != null) {
-				preOrder(cur.left);
-			}
-			
-			if(cur.right != null) {
-				preOrder(cur.right);
-			}
+		if (cur != null)
+			System.out.print(cur.data + ",");
+		if (cur.left != null) {
+			preOrder(cur.left);
+		}
+
+		if (cur.right != null) {
+			preOrder(cur.right);
+		}
 	}
-	
+
 	public static void postOrder(TreeNode cur) {
-		if(cur.right != null) {
+		if (cur.right != null) {
 			postOrder(cur.right);
 		}
-		System.out.print(cur.data+",");
-		if(cur.left != null) {
+		System.out.print(cur.data + ",");
+		if (cur.left != null) {
 			postOrder(cur.left);
 		}
 	}
-	
+
 	static ArrayList<Integer> path = new ArrayList<>();
-	
+
 	public static void depthFirstSearch(TreeNode cur) {
-		if(cur != null) {
+		if (cur != null) {
 			path.add(cur.data);
 			depthFirstSearch(cur.left);
 			depthFirstSearch(cur.right);
-			if(cur.left == null && cur.right == null) {
+			if (cur.left == null && cur.right == null) {
 				System.out.print(path);
 			}
-			path.remove(path.size()-1);
+			path.remove(path.size() - 1);
 		}
 	}
-	
+
 	static int level = 0;
-	
+
 	public static void breadthFirstSearch(ArrayList<TreeNode> bfsList) {
-		if(bfsList.isEmpty())
+		if (bfsList.isEmpty())
 			return;
-		System.out.println("level: "+ ++level);
+		System.out.println("level: " + ++level);
 		ArrayList<TreeNode> temp = new ArrayList<>();
-		for(TreeNode cur:bfsList) {
-			System.out.print(cur.data+",");
-			if(cur.left != null) {
+		for (TreeNode cur : bfsList) {
+			System.out.print(cur.data + ",");
+			if (cur.left != null) {
 				temp.add(cur.left);
 			}
-			if(cur.right != null) {
+			if (cur.right != null) {
 				temp.add(cur.right);
 			}
 		}
 		System.out.println();
 		breadthFirstSearch(temp);
 	}
-	
-	
+
+	static int count = 0;
+
+	public static void findNthNodeInOrderTraversal(int expectedpos, TreeNode cur) {
+
+		if (cur != null && count <= expectedpos) {
+			findNthNodeInOrderTraversal(expectedpos, cur.left);
+			count++;
+
+			if (count == expectedpos) {
+				System.out.println(cur.data);
+			}
+
+			findNthNodeInOrderTraversal(expectedpos, cur.right);
+		}
+	}
+
+	public static boolean findANodeUsingDFS(TreeNode cur, int key) {
+
+		if (cur == null) {
+			return false;
+		}
+		if (cur != null && cur.data == key) {
+			return true;
+		}
+		boolean result1 = findANodeUsingDFS(cur.left, key);
+		boolean result2 = findANodeUsingDFS(cur.right, key);
+		return result1 || result2;
+
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] input = new int[] { 4, 9, 3, 15, 20, 14};
+		int[] input = new int[] { 4, 9, 3, 15, 20, 14 };
 		TreeNode cur = root;
 		for (int data : input) {
 			createBST(data, cur);
 		}
-		
+
 		System.out.println("InOrder Traversal: Ascending");
 		inOrder(cur);
-		System.out.println("\n"+"PreOrder Traversal: ");
+		System.out.println("\n" + "PreOrder Traversal: ");
 		preOrder(cur);
-		System.out.println("\n"+"/nPostOrder Traversal: Descending");
+		System.out.println("\n" + "/nPostOrder Traversal: Descending");
 		postOrder(cur);
-		System.out.println("\n"+"Print all paths depth-first-search");
+		System.out.println("\n" + "Print all paths depth-first-search");
 		depthFirstSearch(cur);
 		ArrayList<TreeNode> bfsList = new ArrayList<>();
 		bfsList.add(root);
-		System.out.println("\n"+"Print all paths breadth-first-search");
+		System.out.println("\n" + "Print all paths breadth-first-search");
 		breadthFirstSearch(bfsList);
+		findNthNodeInOrderTraversal(3, cur);
+		boolean result = findANodeUsingDFS(cur, 14);
+		if (result)
+			System.out.println("found");
+		else
+			System.out.println("not found");
 	}
 }
